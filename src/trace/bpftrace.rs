@@ -1,20 +1,20 @@
 use std::error::Error;
-use super::{Method, Tracer, TraceFilter, TraceOutput, TraceTarget, TraceSubject, Report};
+use super::{Method, Tracer, TraceFilter, Report};
 
-
+#[derive(Copy, Clone)]
 pub struct Bpftrace {
 
 }
 
 impl Bpftrace {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Bpftrace {}
     }
 }
 
 impl Method for Bpftrace {
-    fn describe(&self) -> String {
-        String::new()
+    fn describe(&self) -> &str {
+        "temp"
     }
 
     fn get_filter(&self) -> Result<Box<dyn TraceFilter>, Box<dyn Error>> {
@@ -23,36 +23,79 @@ impl Method for Bpftrace {
 }
 
 impl TraceFilter for Bpftrace {
-    fn set_target(&mut self, target: TraceTarget) -> Box<dyn TraceFilter> {
+    fn set_probe(&mut self, probe: Vec<&str>) -> Box<dyn TraceFilter> {
+
         Box::new(*self)
     }
-    fn set_subject(&mut self, subject: TraceSubject) -> Box<dyn TraceFilter> {
-        Box::new(*self)
+
+    fn list_all_probes(&self) -> Vec<&str> {
+
+        let mut v = Vec::new();
+        v.push("temp");
+        v
     }
-    fn set_output(&mut self, output: TraceOutput) -> Box<dyn TraceFilter> {
-        Box::new(*self)
+
+    fn list_matched_probes(&self, probe: Vec<&str>) -> Vec<&str> {
+
+        let mut v = Vec::new();
+        v.push("temp");
+        v
     }
+
     fn search(&self) -> Result<Vec<Box<dyn Tracer>>, Box<dyn Error>> {
-        Ok(Box::new(BpftraceTracer::new()))
+        let s = Box::new(BpftraceTracer::new());
+        let mut v = Vec::<Box<dyn Tracer>>::new();
+        v.push(s);
+
+        Ok(v)
     }
 }
 
+#[derive(Copy, Clone)]
 pub struct BpftraceTracer {
 
 }
 
 impl BpftraceTracer {
-    fn new() -> Self {
+    pub fn new() -> Self {
         BpftraceTracer {}
     }
 }
 
 impl Tracer for BpftraceTracer {
-    fn describe(&self) -> String {
-        String::new()
+    fn describe(&self) -> &str {
+        "bpftrace tracer"
     }
 
-    // fn set_option(&mut self, option: TraceOption) -> Result<Box<dyn Trace>, Box<dyn Error>>;
+    fn get_probe(&self) -> Vec<&str> {
+        let mut v = Vec::new();
+        v.push("temp");
+        v
+    }
+
+    fn set_output_format(&mut self, format: &str) -> Box<dyn Tracer> {
+
+            Box::new(*self)
+    }
+
+    fn list_available_output_format(&self) -> Vec<&str> {
+
+        let mut v = Vec::new();
+        v.push("temp");
+        v
+    }
+
+    fn set_output_vars(&mut self, output: Vec<&str>) -> Box<dyn Tracer> {
+
+            Box::new(*self)
+    }
+
+    fn list_avaliable_output_vars(&self) -> Vec<&str> {
+
+        let mut v = Vec::new();
+        v.push("temp");
+        v
+    }
 
     fn start(&mut self) -> Result<(), Box<dyn Error>> {
         Ok(())
@@ -63,6 +106,6 @@ impl Tracer for BpftraceTracer {
     }
 
     fn publish(&mut self) -> Result<Report, Box<dyn Error>> {
-        Report {}
+        Ok(Report {})
     }
 }
